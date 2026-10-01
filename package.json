@@ -1,0 +1,41 @@
+{
+  "name": "sneakdrop-assignment",
+  "version": "1.0.0",
+  "description": "A small shoe brand is launching one limited sneaker. They only have 20 pairs. When the sale opens, thousands of people will click Buy at the same second.",
+  "main": "index.js",
+  "scripts": {
+    "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
+    "test": "vitest run",
+    "db:seed": "ts-node prisma/seed.ts",
+    "db:reset": "npx prisma migrate reset --force && npm run db:seed",
+    "postinstall": "prisma generate || exit 0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Raih1107/sneakdrop-assignment.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Raih1107/sneakdrop-assignment/issues"
+  },
+  "homepage": "https://github.com/Raih1107/sneakdrop-assignment#readme",
+  "dependencies": {
+    "@prisma/client": "^5.22.0",
+    "dotenv": "^18.0.5",
+    "express": "^5.2.1",
+    "uuid": "^14.0.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.4",
+    "prisma": "^5.22.0",
+    "ts-node": "^10.9.2",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.0.0",
+    "vitest": "^5.0.3"
+  },
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
+  }
+}

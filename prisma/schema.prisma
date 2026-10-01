@@ -1,0 +1,105 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Product {
+  id             Int          @id @default(autoincrement())
+  name           String
+  totalStock     Int
+  availableStock Int
+  updatedAt      DateTime     @updatedAt
+
+  holds        Hold[]
+  queueEntries QueueEntry[]
+  orders       Order[]
+}
+
+model User {
+  id             String   @id @default(uuid())
+  email          String   @unique
+  name           String
+  totalPurchases Int      @default(0)
+  createdAt      DateTime @default(now())
+
+  holds        Hold[]
+  queueEntries QueueEntry[]
+  orders       Order[]
+}
+
+enum HoldStatus {
+  ACTIVE
+  EXPIRED
+  PURCHASED
+}
+
+model Hold {
+  id        String     @id @default(uuid())
+  userId    String
+  productId Int
+  status    HoldStatus @default(ACTIVE)
+  expiresAt DateTime
+  createdAt DateTime   @default(now())
+
+  user          User           @relation(fields: [userId], references: [id])
+  product       Product        @relation(fields: [productId], references: [id])
+  order         Order?
+  paymentEvents PaymentEvent[]
+
+  @@index([status, expiresAt])
+  @@index([userId, status])
+}
+
+enum QueueStatus {
+  WAITING
+  ALLOCATED
+  CANCELLED
+}
+
+model QueueEntry {
+  id        String      @id @default(uuid())
+  userId    String
+  productId Int
+  status    QueueStatus @default(WAITING)
+  sequence  BigInt      @default(autoincrement())
+  createdAt DateTime    @default(now())
+
+  user    User    @relation(fields: [userId], references: [id])
+  product Product @relation(fields: [productId], references: [id])
+
+  @@index([status, sequence])
+  @@index([userId, status])
+}
+
+model Order {
+  id        String   @id @default(uuid())
+  userId    String
+  holdId    String   @unique
+  productId Int
+  createdAt DateTime @default(now())
+
+  user    User    @relation(fields: [userId], references: [id])
+  hold    Hold    @relation(fields: [holdId], references: [id])
+  product Product @relation(fields: [productId], references: [id])
+}
+
+enum PaymentEventStatus {
+  PENDING
+  PROCESSED
+  IGNORED
+}
+
+model PaymentEvent {
+  id              String             @id @default(uuid())
+  providerEventId String             @unique
+  holdId          String
+  status          PaymentEventStatus @default(PENDING)
+  processedAt     DateTime?
+  createdAt       DateTime           @default(now())
+
+  hold Hold @relation(fields: [holdId], references: [id])
+}
