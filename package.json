@@ -1,41 +1,40 @@
 {
   "name": "sneakdrop-assignment",
   "version": "1.0.0",
-  "description": "A small shoe brand is launching one limited sneaker. They only have 20 pairs. When the sale opens, thousands of people will click Buy at the same second.",
-  "main": "index.js",
+  "description": "Limited sneaker drop — concurrency-safe sale system",
+  "main": "dist/server.js",
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
-    "test": "vitest run",
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "db:generate": "prisma generate",
+    "db:migrate": "prisma migrate dev",
+    "db:reset": "prisma migrate reset --force",
     "db:seed": "ts-node prisma/seed.ts",
-    "db:reset": "npx prisma migrate reset --force && npm run db:seed",
-    "postinstall": "prisma generate || exit 0"
+    "db:studio": "prisma studio",
+    "invariant": "ts-node scripts/invariant-check.ts",
+    "test": "vitest run",
+    "test:stress": "vitest run tests/stress.test.ts --reporter=verbose"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Raih1107/sneakdrop-assignment.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/Raih1107/sneakdrop-assignment/issues"
-  },
-  "homepage": "https://github.com/Raih1107/sneakdrop-assignment#readme",
   "dependencies": {
-    "@prisma/client": "^5.22.0",
-    "dotenv": "^18.0.5",
-    "express": "^5.2.1",
-    "uuid": "^14.0.2"
-  },
-  "devDependencies": {
-    "@types/node": "^22.20.4",
-    "prisma": "^5.22.0",
-    "ts-node": "^10.9.2",
-    "ts-node-dev": "^2.0.0",
-    "typescript": "^5.0.0",
-    "vitest": "^5.0.3"
+    "@prisma/client": "^5.13.0",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "uuid": "^9.0.1"
   },
   "prisma": {
     "seed": "ts-node prisma/seed.ts"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.12.12",
+    "@types/uuid": "^9.0.8",
+    "prisma": "^5.13.0",
+    "supertest": "^7.0.0",
+    "@types/supertest": "^6.0.2",
+    "ts-node": "^10.9.2",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.4.5",
+    "vitest": "^1.6.0"
   }
 }
